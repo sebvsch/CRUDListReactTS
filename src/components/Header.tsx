@@ -1,11 +1,11 @@
-import React from 'react'
+import { FC } from 'react'
 
-function Header() {
+const Header: FC = () => {
     return (
-    <>
-        <h1 className='fs-1 text-center mx-auto fw-bold mb-4'>LISTA DE TAREAS</h1>
-    </>
+        <>
+            <h1 className='fs-2 text-center mx-auto fw-bold mb-2'>LISTA DE TAREAS</h1>
+        </>
     )
 }
 
-export default Header
+export { Header }

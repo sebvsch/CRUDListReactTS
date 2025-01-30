@@ -1,90 +1,75 @@
-import { useContext } from 'react'
-import { TareasContext } from '../context/ListaTareaContext'
-import { Tarea } from '../interface/interface';
+import { FC, useState } from 'react'
+import { IAgregarTarea } from '../interface/interface';
+import { pb } from '../pBase/PBase';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 
-function AgregarTarea() {
+const AgregarTarea: FC = () => {
 
-    const {
-        newTareaTitulo,
-        setNewTareaTitulo,
-        newTareaDetalle,
-        setNewTareaDetalle,
-        newTareaFecha,
-        setNewTareaFecha,
-        tareas,
-        setTareas,
-        pb
-    } = useContext(TareasContext)
+    const [agregarTareas, setAgregarTareas] = useState<IAgregarTarea>({
+        titulo: "",
+        detalle: "",
+        fecha: "",
+        estado: false
+    })
 
-    const aggTarea = async (e: React.FormEvent<HTMLFormElement>) => {
+    const agregarNuevaTarea = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
         const data = {
-            "titulo": newTareaTitulo,
-            "detalle": newTareaDetalle,
-            "fecha": newTareaFecha,
-            "estado": false,
+            "titulo": agregarTareas.titulo,
+            "detalle": agregarTareas.detalle,
+            "fecha": agregarTareas.fecha,
+            "estado": agregarTareas.estado
         };
-
-        const record = await pb.collection('listaTarea').create(data);
-
-        const nuevaTarea: Tarea = {
-            id: record.id,
-            titulo: newTareaTitulo,
-            detalle: newTareaDetalle,
-            fecha: newTareaFecha,
-            estado: false,
+        try {
+            await pb.collection('Tareas').create(data)
+        } catch (e) {
+            alert(e)
         };
-        setTareas([...tareas, nuevaTarea])
-
-        setNewTareaTitulo('');
-        setNewTareaDetalle('');
-        setNewTareaFecha('')
-    }
+    };
 
     return (
-        <div className='mb-3'>
-            <form className='text-center' onSubmit={aggTarea}>
-                <div className='d-inline-block gap-2 col-2 mx-auto' style={{ marginBottom: '10px' }}>
-                    <input
-                        className='border rounded py-2 w-75'
-                        required={true}
-                        type="text"
-                        placeholder='Titulo'
-                        value={newTareaTitulo}
-                        onChange={e => setNewTareaTitulo(e.target.value)}
-                    />
+        <div className='mb-2'>
+            <form className='text-center' onSubmit={agregarNuevaTarea}>
+                <div className='d-flex justify-content-center align-items-center gap-4'>
+                    <div>
+                        <input
+                            className='border rounded py-2 w-auto'
+                            required={true}
+                            type="text"
+                            placeholder='Titulo'
+                            value={agregarTareas.titulo}
+                            onChange={(e) => setAgregarTareas({ ...agregarTareas, titulo: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            className='border rounded py-2 w-auto'
+                            required={true}
+                            type="text"
+                            placeholder='Detalle'
+                            value={agregarTareas.detalle}
+                            onChange={(e) => setAgregarTareas({ ...agregarTareas, detalle: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <input
+                            className='border rounded py-2 w-auto'
+                            required={true}
+                            type="date"
+                            value={agregarTareas.fecha}
+                            min={new Date().toISOString().split('T')[0]}
+                            onChange={(e) => setAgregarTareas({ ...agregarTareas, fecha: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <button className="btn btn-primary fw-semibold px-3 py-1"><span className="material-symbols-outlined fs-3 d-flex">add_circle</span></button>
+                    </div>
                 </div>
-                <div className='d-inline-block gap-2 col-2 mx-auto' style={{ marginBottom: '10px' }}>
-                    <input
-                        className='border rounded py-2 w-75'
-                        required={true}
-                        type="text"
-                        placeholder='Detalle'
-                        value={newTareaDetalle}
-                        onChange={e => setNewTareaDetalle(e.target.value)}
-                    />
-                </div>
-                <div className='d-inline-block gap-2 col-2 mx-auto' style={{ marginBottom: '10px' }}>
-                    <input
-                        className='border rounded py-2 w-75'    
-                        required={true}
-                        type="date"
-                        value={newTareaFecha}
-                        min={new Date().toISOString().split('T')[0]}
-                        onChange={(e) => setNewTareaFecha(e.target.value)}
-                    />
-                </div>
-                <div className='d-inline-block gap-2 col-2 mx-auto' style={{ marginBottom: '10px' }}>
-                    <button className="btn btn-primary fw-semibold"><span className="material-symbols-outlined fs-3 p-1">add_circle</span></button>
-                </div>
-
             </form>
         </div>
     )
 }
 
-export default AgregarTarea
+export { AgregarTarea }

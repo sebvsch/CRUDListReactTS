@@ -1,18 +1,15 @@
-import AgregarTarea from './components/AgregarTarea'
-import Header from './components/Header'
-import ListaTarea from './components/ListaTarea'
-import { TareasContextProvider } from './context/ListaTareaContext'
+import { AgregarTarea } from './components/AgregarTarea'
+import { Header } from './components/Header'
+import { ListaTarea } from './components/ListaTarea'
 
 function App() {
 
 
   return (
     <>
-      <TareasContextProvider>
-        <Header />
-        <AgregarTarea />
-        <ListaTarea />
-      </TareasContextProvider>
+      <Header />
+      <AgregarTarea />
+      <ListaTarea />
     </>
   )
 }
